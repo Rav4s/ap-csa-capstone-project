@@ -2,10 +2,13 @@ package scraper;
 
 // Import AWT Graphics
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.io.IOException;
 
-public class View {
+public class View implements ActionListener {
 
     private int height;
     private int width;
@@ -23,34 +26,47 @@ public class View {
             }
         });
 
-        // creating a Label
-        Label l = new Label("Employee id:");
+        // Creating a Label
+        Label title = new Label("Formula 1 Stats Viewer:");
+        title.setFont(new Font("Sans Serif", Font.PLAIN, 32));
 
-        // creating a Button
-        Button b = new Button("Submit");
+        // Creating a Button
+        Button seasons = new Button("Seasons");
+        seasons.setFont(new Font("Sans Serif", Font.PLAIN, 24));
+        seasons.addActionListener(this);
 
-        // setting position of above components in the frame
-        l.setBounds(20, 80, 80, 30);
-        b.setBounds(100, 100, 80, 30);
+        // Setting position in the frame
+        int labelWidth = 150;
+        title.setBounds((width / 2) - (labelWidth / 2), height / 10, labelWidth, 30);
+        seasons.setBounds((width / 4), (height / 4), 120, 40);
 
-        // adding components into frame
-        f.add(b);
-        f.add(l);
+        // Adding into frame
+        f.add(seasons);
+        f.add(title);
 
-        // frame size 300 width and 300 height
+        // Setting frame size
         f.setSize(width, height);
 
-        // setting the title of frame
+        // Setting frame title
         f.setTitle("F1 Stats");
 
-        // no layout
+        // No layout
         f.setLayout(null);
 
-        // setting visibility of frame
+        // Make frame visible
         f.setVisible(true);
     }
 
     public void mainDisplay() {
         System.out.println("Main Display Opened");
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        try {
+            Scrape.scrapeRaceResults("2021", "bahrain");
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 }
