@@ -61,12 +61,23 @@ public class View implements ActionListener {
         System.out.println("Main Display Opened");
     }
 
+    // Handle Button clicks
     @Override
     public void actionPerformed(ActionEvent e) {
-        try {
-            Scrape.scrapeRaceResults("2021", "bahrain");
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
+
+        // Seasons click
+        if (e.getActionCommand().equals("Seasons")) {
+            try {
+                System.out.println(e);
+                Scrape.scrapeRaceResults("2021", "bahrain");
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+
+        // If Button handler isn't defined
+        else {
+            System.out.println("No handler for action command: " + e.getActionCommand());
         }
     }
 }
