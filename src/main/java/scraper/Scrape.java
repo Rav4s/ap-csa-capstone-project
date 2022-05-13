@@ -1,5 +1,6 @@
 package scraper;
 
+// Import WebClient
 import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.NicelyResynchronizingAjaxController;
 import com.gargoylesoftware.htmlunit.SilentCssErrorHandler;
@@ -44,7 +45,7 @@ public class Scrape {
         }
 
         if (finalLink == null) {
-            System.out.println("Race/year combination ddoesnt exist");
+            System.out.println("Race/year combination doesn't exist!!");
             webClient.close();
             return;
         }
