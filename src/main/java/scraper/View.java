@@ -40,7 +40,10 @@ public class View implements ActionListener {
         f.setVisible(true);
     }
 
-    public void mainDisplay() {
+    public void mainDisplay() throws IOException {
+
+        // Clear screen
+        this.clear();
 
         // Creating a Label
         Label title = new Label("Formula 1 Stats Viewer:");
@@ -59,8 +62,6 @@ public class View implements ActionListener {
         // Adding into frame
         f.add(seasons);
         f.add(title);
-
-        System.out.println("Main Display Opened");
     }
 
     // Clear all objects on the frame
@@ -69,8 +70,22 @@ public class View implements ActionListener {
     }
 
     public void listSeasons() throws IOException {
+
+        // Clear screen
         this.clear();
-        Scrape.scrapeRaceResults("2021", "bahrain");
+
+        // Add home button
+        Button home = new Button("Home");
+        home.setFont(new Font("Sans Serif", Font.PLAIN, 24));
+        home.addActionListener(this);
+
+        // Setting position in frame
+        home.setBounds((width / 8), (height / 8), 120, 40);
+
+        // Adding into frame
+        f.add(home);
+
+        //Scrape.scrapeRaceResults("2021", "bahrain");
     }
 
     // Handle Button clicks
@@ -81,6 +96,15 @@ public class View implements ActionListener {
         if (e.getActionCommand().equals("Seasons")) {
             try {
                 this.listSeasons();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+
+        // Home click
+        if (e.getActionCommand().equals("Home")) {
+            try {
+                this.mainDisplay();
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
