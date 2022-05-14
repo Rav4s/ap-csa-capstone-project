@@ -12,12 +12,13 @@ public class View implements ActionListener {
 
     private int height;
     private int width;
+    private Frame f;
     public View() {
         height = 1024;
         width = 1920;
 
         // Creating the Frame
-        Frame f = new Frame();
+        f = new Frame();
 
         // Handling window close
         f.addWindowListener(new WindowAdapter() {
@@ -25,6 +26,21 @@ public class View implements ActionListener {
                 f.dispose();
             }
         });
+
+        // Setting frame size
+        f.setSize(width, height);
+
+        // Setting frame title
+        f.setTitle("F1 Stats");
+
+        // No layout
+        f.setLayout(null);
+
+        // Make frame visible
+        f.setVisible(true);
+    }
+
+    public void mainDisplay() {
 
         // Creating a Label
         Label title = new Label("Formula 1 Stats Viewer:");
@@ -44,21 +60,17 @@ public class View implements ActionListener {
         f.add(seasons);
         f.add(title);
 
-        // Setting frame size
-        f.setSize(width, height);
-
-        // Setting frame title
-        f.setTitle("F1 Stats");
-
-        // No layout
-        f.setLayout(null);
-
-        // Make frame visible
-        f.setVisible(true);
+        System.out.println("Main Display Opened");
     }
 
-    public void mainDisplay() {
-        System.out.println("Main Display Opened");
+    // Clear all objects on the frame
+    public void clear() {
+        f.removeAll();
+    }
+
+    public void listSeasons() throws IOException {
+        this.clear();
+        Scrape.scrapeRaceResults("2021", "bahrain");
     }
 
     // Handle Button clicks
@@ -68,8 +80,7 @@ public class View implements ActionListener {
         // Seasons click
         if (e.getActionCommand().equals("Seasons")) {
             try {
-                System.out.println(e);
-                Scrape.scrapeRaceResults("2021", "bahrain");
+                this.listSeasons();
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
