@@ -5,20 +5,18 @@ import com.gargoylesoftware.htmlunit.BrowserVersion;
 import com.gargoylesoftware.htmlunit.NicelyResynchronizingAjaxController;
 import com.gargoylesoftware.htmlunit.SilentCssErrorHandler;
 import com.gargoylesoftware.htmlunit.WebClient;
-import com.gargoylesoftware.htmlunit.html.HtmlAnchor;
-import com.gargoylesoftware.htmlunit.html.HtmlDivision;
-import com.gargoylesoftware.htmlunit.html.HtmlPage;
-import com.gargoylesoftware.htmlunit.html.HtmlUnorderedList;
+import com.gargoylesoftware.htmlunit.html.*;
 import com.gargoylesoftware.htmlunit.javascript.host.html.HTMLAnchorElement;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Scrape {
-    public static void scrapeRaceResults(String year, String raceName) throws IOException {
-
+    private static WebClient webClient;
+    public static void setUpWebclient() {
         // Set up webClient
-        WebClient webClient = new WebClient(BrowserVersion.BEST_SUPPORTED);
+        webClient = new WebClient(BrowserVersion.BEST_SUPPORTED);
         webClient.setCssErrorHandler(new SilentCssErrorHandler());
         webClient.setAjaxController(new NicelyResynchronizingAjaxController());
         webClient.getOptions().setCssEnabled(true);
@@ -27,6 +25,10 @@ public class Scrape {
         webClient.getOptions().setJavaScriptEnabled(false);
         webClient.getOptions().setPopupBlockerEnabled(true);
         webClient.getOptions().setTimeout(10000);
+    }
+    public static void scrapeRaceResults(String year, String raceName) throws IOException {
+
+        setUpWebclient();
 
         // Get list of links for provided year
         String yearURL = "https://www.formula1.com/en/results.html/" + year + "/races.html";
@@ -55,7 +57,27 @@ public class Scrape {
         HtmlPage page = webClient.getPage(url);
         List<HtmlDivision> results = page.getByXPath("//div[@class='resultsarchive-col-right']");
 
-        System.out.println(results.get(0).asXml());
         webClient.close();
+    }
+
+    public static List<String> scrapeSeasonsList() throws IOException {
+
+        setUpWebclient();
+
+        // Get list of seasons
+        String yearURL = "https://www.formula1.com/en/results.html";
+        HtmlPage yearPage = webClient.getPage(yearURL);
+        List<HtmlUnorderedList> seasonsList = yearPage.getByXPath("//ul[@class='resultsarchive-filter ResultFilterScrollable']");
+        List<HtmlSpan> seasons = seasonsList.get(0).getByXPath(".//span[@class='clip']");
+
+        // Create list of text within span
+        List<String> seasonsText = new ArrayList<String>();
+        for (HtmlSpan a : seasons) {
+            String year = a.getTextContent();
+            seasonsText.add(year);
+        }
+
+        webClient.close();
+        return seasonsText;
     }
 }

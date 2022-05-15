@@ -1,12 +1,14 @@
 package scraper;
 
 // Import AWT Graphics
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.io.IOException;
+import java.util.List;
 
 public class View implements ActionListener {
 
@@ -80,12 +82,32 @@ public class View implements ActionListener {
         home.addActionListener(this);
 
         // Setting position in frame
-        home.setBounds((width / 8), (height / 8), 120, 40);
+        home.setBounds(20, 40, 120, 40);
 
         // Adding into frame
         f.add(home);
 
-        //Scrape.scrapeRaceResults("2021", "bahrain");
+        // Create grid for buttons
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new GridLayout(10, 10));
+        mainPanel.setBounds(80, 100, f.getWidth() - 200, f.getHeight() - 200);
+        f.add(mainPanel);
+
+
+        // Get list of all seasons
+        List<String> seasonsList = Scrape.scrapeSeasonsList();
+        System.out.println(seasonsList.toString());
+
+        // Add buttons to grid
+        for (String i : seasonsList) {
+            Button b = new Button(i);
+            b.setFont(new Font("Sans Serif", Font.PLAIN, 16));
+            b.addActionListener(this);
+            mainPanel.add(b);
+        }
+
+        mainPanel.revalidate();
+        f.revalidate();
     }
 
     // Handle Button clicks
@@ -102,7 +124,16 @@ public class View implements ActionListener {
         }
 
         // Home click
-        if (e.getActionCommand().equals("Home")) {
+        else if (e.getActionCommand().equals("Home")) {
+            try {
+                this.mainDisplay();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        }
+
+        // Home click
+        else if (e.getActionCommand().equals("Home")) {
             try {
                 this.mainDisplay();
             } catch (IOException ex) {
