@@ -57,9 +57,9 @@ public class View implements ActionListener {
         seasons.addActionListener(this);
 
         // Setting position in the frame
-        int labelWidth = 150;
-        title.setBounds((width / 2) - (labelWidth / 2), height / 10, labelWidth, 30);
-        seasons.setBounds((width / 4), (height / 4), 120, 40);
+        int labelWidth = 370;
+        title.setBounds((f.getWidth() / 2) - (labelWidth / 2), f.getHeight() / 10, labelWidth, 40);
+        seasons.setBounds((f.getWidth() / 2) - 120, (f.getHeight() / 4), 120, 40);
 
         // Adding into frame
         f.add(seasons);
@@ -96,7 +96,6 @@ public class View implements ActionListener {
 
         // Get list of all seasons
         List<String> seasonsList = Scrape.scrapeSeasonsList();
-        System.out.println(seasonsList.toString());
 
         // Add buttons to grid
         for (String i : seasonsList) {
@@ -107,6 +106,51 @@ public class View implements ActionListener {
         }
 
         mainPanel.revalidate();
+        f.revalidate();
+    }
+
+    public void seasonDetails(String season) throws IOException {
+
+        // Clear screen
+        this.clear();
+
+        // Add home button
+        Button home = new Button("Home");
+        home.setFont(new Font("Sans Serif", Font.PLAIN, 24));
+        home.addActionListener(this);
+
+        // Creating a Label
+        Label title = new Label(season + " Formula 1 Season");
+        title.setFont(new Font("Sans Serif", Font.PLAIN, 32));
+
+        // Setting position in frame
+        int labelWidth = 500;
+        title.setBounds((f.getWidth() / 2) - (labelWidth / 2), f.getHeight() / 10, labelWidth, 30);
+        home.setBounds(20, 40, 120, 40);
+
+        // Adding into frame
+        f.add(home);
+        f.add(title);
+
+     /*   // Create grid for buttons
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new GridLayout(10, 10));
+        mainPanel.setBounds(80, 100, f.getWidth() - 200, f.getHeight() - 200);
+        f.add(mainPanel);
+
+
+        // Get list of all seasons
+        List<String> seasonsList = Scrape.scrapeSeasonsList();
+
+        // Add buttons to grid
+        for (String i : seasonsList) {
+            Button b = new Button(i);
+            b.setFont(new Font("Sans Serif", Font.PLAIN, 16));
+            b.addActionListener(this);
+            mainPanel.add(b);
+        }
+
+        mainPanel.revalidate();*/
         f.revalidate();
     }
 
@@ -132,10 +176,10 @@ public class View implements ActionListener {
             }
         }
 
-        // Home click
-        else if (e.getActionCommand().equals("Home")) {
+        // Click on a specific season
+        else if (e.getActionCommand().matches("[0-9]+") && e.getActionCommand().length() == 4) {
             try {
-                this.mainDisplay();
+                this.seasonDetails(e.getActionCommand());
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
@@ -143,7 +187,7 @@ public class View implements ActionListener {
 
         // If Button handler isn't defined
         else {
-            System.out.println("No handler for action command: " + e.getActionCommand());
+            System.out.println("No handler for action command: " + e.toString());
         }
     }
 }
