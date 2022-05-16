@@ -60,6 +60,7 @@ public class Scrape {
         // Get names of winners
         List<HtmlHeading1> fullnames = page.getByXPath("//h1[@class='ResultsArchiveTitle']");
         String fullname = fullnames.get(0).getTextContent().strip();
+        fullname = fullname.substring(0, fullname.indexOf("-"));
 
         List<HtmlSpan> firsts = page.getByXPath("//span[@class='hide-for-tablet']");
         List<HtmlSpan> lasts = page.getByXPath("//span[@class='hide-for-mobile']");

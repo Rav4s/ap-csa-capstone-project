@@ -171,10 +171,54 @@ public class View implements ActionListener {
     }
 
     public void raceDetails(String season, String name) throws IOException {
-        System.out.println(season);
-        System.out.println(name);
+
+        // Clear screen
+        this.clear();
+
+        // Get race details
         List<String> details = Scrape.scrapeRaceResults(season, name.toLowerCase().strip().replace(' ', '-'));
         System.out.println(details);
+
+        // Add home button
+        Button home = new Button("Home");
+        home.setFont(new Font("Sans Serif", Font.PLAIN, 24));
+        home.addActionListener(this);
+
+        // Seasons button
+        Button seasons = new Button("Seasons");
+        seasons.setFont(new Font("Sans Serif", Font.PLAIN, 24));
+        seasons.addActionListener(this);
+
+        // Race Full Name
+        Label title = new Label(details.get(0));
+        title.setFont(new Font("Sans Serif", Font.PLAIN, 32));
+
+        // Race winners
+        Label winner = new Label("Race Winner: " + details.get(1));
+        Label second = new Label("Second Place: " + details.get(2));
+        Label third = new Label("Third Place: " + details.get(3));
+        winner.setFont(new Font("Sans Serif", Font.PLAIN, 28));
+        second.setFont(new Font("Sans Serif", Font.PLAIN, 28));
+        third.setFont(new Font("Sans Serif", Font.PLAIN, 28));
+
+        // Setting position in frame
+        int labelWidth = f.getWidth();
+        title.setBounds(20, f.getHeight() / 10, labelWidth, 30);
+        home.setBounds(20, 40, 120, 40);
+        seasons.setBounds(160, 40, 120, 40);
+        winner.setBounds(20, 170, 400, 30);
+        second.setBounds(20, 220, 400, 30);
+        third.setBounds(20, 270, 400, 30);
+
+        // Adding into frame
+        f.add(home);
+        f.add(title);
+        f.add(seasons);
+        f.add(winner);
+        f.add(second);
+        f.add(third);
+
+        f.revalidate();
     }
 
     // Handle Button clicks
