@@ -26,7 +26,7 @@ public class Scrape {
         webClient.getOptions().setPopupBlockerEnabled(true);
         webClient.getOptions().setTimeout(10000);
     }
-    public static void scrapeRaceResults(String year, String raceName) throws IOException {
+    public static List<String> scrapeRaceResults(String year, String raceName) throws IOException {
 
         setUpWebclient();
 
@@ -49,7 +49,7 @@ public class Scrape {
         if (finalLink == null) {
             System.out.println("Race/year combination doesn't exist!!");
             webClient.close();
-            return;
+            return null;
         }
 
         // Get race results
@@ -57,7 +57,26 @@ public class Scrape {
         HtmlPage page = webClient.getPage(url);
         List<HtmlDivision> results = page.getByXPath("//div[@class='resultsarchive-col-right']");
 
+        // Get names of winners
+        List<HtmlHeading1> fullnames = page.getByXPath("//h1[@class='ResultsArchiveTitle']");
+        String fullname = fullnames.get(0).getTextContent().strip();
+
+        List<HtmlSpan> firsts = page.getByXPath("//span[@class='hide-for-tablet']");
+        List<HtmlSpan> lasts = page.getByXPath("//span[@class='hide-for-mobile']");
+
+        String winner = firsts.get(0).getTextContent().strip() + " " + lasts.get(0).getTextContent().strip();
+        String second = firsts.get(1).getTextContent().strip() + " " + lasts.get(1).getTextContent().strip();
+        String third = firsts.get(2).getTextContent().strip() + " " + lasts.get(2).getTextContent().strip();
+
+        // Create list to return
+        List<String> rets = new ArrayList<String>();
+        rets.add(fullname);
+        rets.add(winner);
+        rets.add(second);
+        rets.add(third);
+
         webClient.close();
+        return rets;
     }
 
     public static List<String> scrapeSeasonsList() throws IOException {

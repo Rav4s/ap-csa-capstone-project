@@ -171,8 +171,12 @@ public class View implements ActionListener {
     }
 
     public void raceDetails(String season, String name) throws IOException {
-
+        System.out.println(season);
+        System.out.println(name);
+        List<String> details = Scrape.scrapeRaceResults(season, name.toLowerCase().strip().replace(' ', '-'));
+        System.out.println(details);
     }
+
     // Handle Button clicks
     @Override
     public void actionPerformed(ActionEvent e) {
