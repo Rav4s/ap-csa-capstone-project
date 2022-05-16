@@ -34,7 +34,7 @@ public class Scrape {
         String yearURL = "https://www.formula1.com/en/results.html/" + year + "/races.html";
         HtmlPage yearPage = webClient.getPage(yearURL);
         List<HtmlUnorderedList> yearResults = yearPage.getByXPath("//ul[@class='resultsarchive-filter ResultFilterScrollable']");
-        List<HtmlAnchor> links = yearResults.get(2).getByXPath("//a[@class='resultsarchive-filter-item-link FilterTrigger ']");
+        List<HtmlAnchor> links = yearResults.get(2).getByXPath(".//a[@class='resultsarchive-filter-item-link FilterTrigger ']");
 
         // Find link for specific race
         String finalLink = null;
@@ -79,5 +79,29 @@ public class Scrape {
 
         webClient.close();
         return seasonsText;
+    }
+
+    public static List<String> scrapeRacesList(String season) throws IOException {
+
+        setUpWebclient();
+
+        // Get list of races for provided year
+        String yearURL = "https://www.formula1.com/en/results.html/" + season + "/races.html";
+        HtmlPage yearPage = webClient.getPage(yearURL);
+        List<HtmlUnorderedList> yearResults = yearPage.getByXPath("//ul[@class='resultsarchive-filter ResultFilterScrollable']");
+        List<HtmlSpan> names = yearResults.get(2).getByXPath(".//span[@class='clip']");
+        System.out.println(names.toString());
+
+        // Create list of text within span
+        List<String> raceNames = new ArrayList<String>();
+        for (HtmlSpan a : names) {
+            String name = a.getTextContent();
+            raceNames.add(name);
+        }
+        // Remove "all" item
+        raceNames.remove(0);
+
+        webClient.close();
+        return raceNames;
     }
 }
